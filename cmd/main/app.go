@@ -66,10 +66,9 @@ func getListener(conf *config.Config) net.Listener {
 		logger.Info("listen unix socket...")
 		listener, listenerErr = net.Listen(UNIX, socketPath)
 	} else {
-		var err error
 		logger.Info("listen tcp socket...")
 		listener, listenerErr = net.Listen(TCP, fmt.Sprintf("%s:%s", conf.Listen.BindIP, conf.Listen.Port))
-		utils.ErrorHandler(err)
+		utils.ErrorHandler(listenerErr)
 	}
 	utils.ErrorHandler(listenerErr)
 	return listener
