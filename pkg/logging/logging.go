@@ -37,12 +37,12 @@ type Logger struct {
 	*logrus.Entry
 }
 
-func GetLogger() Logger {
-	return Logger{e}
+func GetLogger() *Logger {
+	return &Logger{e}
 }
 
-func (logger *Logger) GetLoggerWithField(k string, v interface{}) Logger {
-	return Logger{logger.WithField(k, v)}
+func (logger *Logger) GetLoggerWithField(k string, v interface{}) *Logger {
+	return &Logger{logger.WithField(k, v)}
 }
 
 func init() {
@@ -56,18 +56,16 @@ func init() {
 		DisableColors: false,
 		FullTimestamp: true,
 	}
-	dirName := "logs"
-	if _, err := os.Stat(dirName); err != nil {
-		err := os.MkdirAll(dirName, 0644)
-		utils.ErrorHandler(err)
-	}
-	allFiles, err := os.OpenFile(dirName+"/all.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0640)
+	err := os.MkdirAll("logs", 0644)
+	utils.ErrorHandler(err)
+
+	allFile, err := os.OpenFile("logs/all.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0640)
 	utils.ErrorHandler(err)
 
 	logger.SetOutput(io.Discard)
 
 	logger.AddHook(&writeHook{
-		Writer:    []io.Writer{allFiles, os.Stdout},
+		Writer:    []io.Writer{allFile, os.Stdout},
 		LogLevels: logrus.AllLevels,
 	})
 	logger.SetLevel(logrus.TraceLevel)
