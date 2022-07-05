@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"go_test/pkg/logging"
+	"go_test/pkg/utils"
 	"net"
 	"net/http"
 	"time"
@@ -11,35 +11,29 @@ import (
 	"go_test/internal/user"
 )
 
-func IndexHendler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	name := params.ByName("name")
-	w.Write([]byte(fmt.Sprintf("Hello %s", name)))
-}
-
 func main() {
-	log.Println("create router...")
+	logger := logging.GetLogger()
+	logger.Info("create router...")
 	router := httprouter.New()
 
-	handler :=user.NewHandler()
-	log.Println("register user handler...")
+	handler := user.NewHandler(logger)
+	logger.Info("register user handler...")
 	handler.Register(router)
 	start(router)
 }
 
 func start(router *httprouter.Router) {
-	log.Println("start application...")
+	logger := logging.GetLogger()
+	logger.Info("start application...")
 	port := ":1234"
 	listener, err := net.Listen("tcp", port)
-
-	if err != nil {
-		panic(err)
-	}
+	utils.ErrorHandler(err)
 
 	server := &http.Server{
-		Handler: router,
+		Handler:      router,
 		WriteTimeout: 15 * time.Second,
-		ReadTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
-	log.Printf("server is listening 0.0.0.0%s", port)
-	log.Fatalln(server.Serve(listener))
+	logger.Infof("server is listening 0.0.0.0%s", port)
+	logger.Fatal(server.Serve(listener))
 }
