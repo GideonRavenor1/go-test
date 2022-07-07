@@ -35,42 +35,42 @@ func (h *handler) Register(router *httprouter.Router) {
 }
 
 func (h *handler) GetList(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte("this is list of users"))
 	utils.ErrorHandler(err)
 	h.logger.Info("get list users")
 }
 
 func (h *handler) GetUserByUUID(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte("this is get user"))
 	utils.ErrorHandler(err)
 	h.logger.Info("get user by uuid")
 }
 
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(201)
+	w.WriteHeader(http.StatusCreated)
 	_, err := w.Write([]byte("this is create user"))
 	utils.ErrorHandler(err)
 	h.logger.Info("create user")
 }
 
 func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte("this is update user"))
 	utils.ErrorHandler(err)
 	h.logger.Info("update user")
 }
 
 func (h *handler) PartiallyUpdateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte("this is pathupdate user"))
 	utils.ErrorHandler(err)
 	h.logger.Info("partially update user")
 }
 
 func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	w.WriteHeader(204)
+	w.WriteHeader(http.StatusNoContent)
 	_, err := w.Write([]byte("this is delete user"))
 	utils.ErrorHandler(err)
 	h.logger.Info("delete user")

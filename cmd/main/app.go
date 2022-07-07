@@ -11,15 +11,15 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/julienschmidt/httprouter"
 	"go_test/internal/config"
 	"go_test/internal/user"
-	"github.com/julienschmidt/httprouter"
 )
 
-const SOCKET = "sock"
-const PORT = "port"
-const SOCKET_FILE_NAME = "app.sock"
-const UNIX = "unix"
+const Socket = "sock"
+const Port = "port"
+const SocketFileName = "app.sock"
+const Unix = "unix"
 const TCP = "tcp"
 
 func main() {
@@ -43,28 +43,27 @@ func start(router *httprouter.Router, conf *config.Config) {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	if conf.Listen.Type == PORT {
+	if conf.Listen.Type == Port {
 		logger.Infof("server is listening %s:%s", conf.Listen.BindIP, conf.Listen.Port)
 	} else {
 		logger.Info("server is listening unix socket")
 	}
-	
+
 	logger.Fatal(server.Serve(listener))
 }
-
 
 func getListener(conf *config.Config) net.Listener {
 	logger := logging.GetLogger()
 	var listener net.Listener
 	var listenerErr error
-	if conf.Listen.Type == SOCKET {
+	if conf.Listen.Type == Socket {
 		appDIr, err := filepath.Abs(filepath.Dir(os.Args[0]))
 		utils.ErrorHandler(err)
 		logger.Info("create socket...")
-		socketPath := path.Join(appDIr, SOCKET_FILE_NAME)
+		socketPath := path.Join(appDIr, SocketFileName)
 		logger.Debugf("socker path: %s", socketPath)
 		logger.Info("listen unix socket...")
-		listener, listenerErr = net.Listen(UNIX, socketPath)
+		listener, listenerErr = net.Listen(Unix, socketPath)
 	} else {
 		logger.Info("listen tcp socket...")
 		listener, listenerErr = net.Listen(TCP, fmt.Sprintf("%s:%s", conf.Listen.BindIP, conf.Listen.Port))
