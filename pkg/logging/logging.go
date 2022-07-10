@@ -2,12 +2,13 @@ package logging
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"go_test/pkg/utils"
 	"io"
 	"os"
 	"path"
 	"runtime"
+
+	"github.com/sirupsen/logrus"
 )
 
 type writeHook struct {
@@ -22,7 +23,7 @@ func (hook *writeHook) Fire(entry *logrus.Entry) error {
 	}
 	for _, w := range hook.Writer {
 		_, err := w.Write([]byte(line))
-		utils.ErrorHandler(err)
+		utils.PanicHandler(err)
 	}
 	return err
 }
@@ -57,10 +58,10 @@ func init() {
 		FullTimestamp: true,
 	}
 	err := os.MkdirAll("logs", 0644)
-	utils.ErrorHandler(err)
+	utils.PanicHandler(err)
 
 	allFile, err := os.OpenFile("logs/all.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0640)
-	utils.ErrorHandler(err)
+	utils.PanicHandler(err)
 
 	logger.SetOutput(io.Discard)
 

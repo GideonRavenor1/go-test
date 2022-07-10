@@ -11,9 +11,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/julienschmidt/httprouter"
 	"go_test/internal/config"
 	"go_test/internal/user"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 const Socket = "sock"
@@ -58,7 +59,7 @@ func getListener(conf *config.Config) net.Listener {
 	var listenerErr error
 	if conf.Listen.Type == Socket {
 		appDIr, err := filepath.Abs(filepath.Dir(os.Args[0]))
-		utils.ErrorHandler(err)
+		utils.PanicHandler(err)
 		logger.Info("create socket...")
 		socketPath := path.Join(appDIr, SocketFileName)
 		logger.Debugf("socker path: %s", socketPath)
@@ -67,8 +68,8 @@ func getListener(conf *config.Config) net.Listener {
 	} else {
 		logger.Info("listen tcp socket...")
 		listener, listenerErr = net.Listen(TCP, fmt.Sprintf("%s:%s", conf.Listen.BindIP, conf.Listen.Port))
-		utils.ErrorHandler(listenerErr)
+		utils.PanicHandler(listenerErr)
 	}
-	utils.ErrorHandler(listenerErr)
+	utils.PanicHandler(listenerErr)
 	return listener
 }

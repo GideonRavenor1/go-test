@@ -1,6 +1,6 @@
 package utils
 
-func ErrorHandler(err error) {
+func PanicHandler(err error) {
 	if err != nil {
 		panic(err)
 	}
